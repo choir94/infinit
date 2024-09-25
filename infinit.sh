@@ -84,27 +84,34 @@ echo
 # Menghapus skrip deployAaveV3Action yang lama jika ada
 rm -rf src/scripts/deployAaveV3Action.script.ts
 
-import { deployAaveV3Action, type actions } from '@aave-v3/actions' 
+cat <<EOF > src/scripts/deployAaveV3Action.script.ts
+import { DeployAaveV3Action, type actions } from '@infinit-xyz/aave-v3/actions'
 import type { z } from 'zod'
-
-// Sesuaikan tipe parameter dengan Aave V3
+ 
 type Param = z.infer<typeof actions['init']['paramSchema']>
-
-// TODO: Ganti dengan parameter yang sebenarnya
+ 
+// TODO: Replace with actual params
 const params: Param = {
-  // TODO: Masukkan alamat Pool dari Aave V3
-  "aavePoolAddress": undefined,
-
-  // TODO: Masukkan alamat pemilik baru
-  "newAdmin": undefined
+  // TODO: Native currency label (e.g., ETH)
+  "nativeCurrencyLabel": 'ETH',
+ 
+  // TODO: Address of the owner of the proxy admin
+  "proxyAdminOwner": '0xE04A57dFC52B65C1ABaDc8D9F7b968Ea60685b3E',
+ 
+  // TODO: Address of the owner of factory
+  "factoryOwner": '0xE04A57dFC52B65C1ABaDc8D9F7b968Ea60685b3E',
+ 
+  // TODO: Address of the wrapped native token (e.g., '0x123...abc')
+  "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 }
-
-// TODO: Ganti dengan id penandatangan yang sebenarnya
-const signer = {
-  "currentAdmin": ""
+ 
+// TODO: Replace with actual account id
+const accounts = {
+  "deployer": "test-acc"
 }
-
-export default { params, signer, Action: deployAaveV3Action }
+ 
+export default { params, signer: accounts, Action: DeployAaveV3Action }
+EOF
 
 show "Menjalankan skrip Aave V3 Action..."
 echo
