@@ -90,30 +90,30 @@ import type { z } from 'zod'
 
 type Param = z.infer<typeof actions['init']['paramsSchema']>
 
-// Parameter aktual untuk Aave V3
+// Ganti dengan parameter yang sesuai untuk Aave V3
 const params: Param = {
   // Label mata uang asli (misalnya, ETH)
   "nativeCurrencyLabel": 'ETH',
 
-  // Alamat pemilik proxy admin
+  // Alamat pemilik dari proxy admin
   "proxyAdminOwner": '$WALLET',
 
-  // Alamat pemilik pool
-  "poolOwner": '$WALLET',
+  // Alamat pemilik dari factory
+  "factoryOwner": '$WALLET',
 
-  // Alamat token asli yang dibungkus (misalnya, WETH)
+  // Alamat dari wrapped native token (misalnya, WETH)
   "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
 
-  // Alamat penyedia alamat pool pinjaman
+  // Alamat dari lending pool addresses provider untuk Aave V3
   "lendingPoolAddressesProvider": '0x24a5e9B95a225Bef7B2F73A0f88D006B51D5B3DA',
 
-  // Alamat pengendali insentif
+  // Alamat dari Aave incentives controller
   "incentivesController": '0xD7cC11D6cA6790B5aFF771A9d7C66B8B16e05F08',
 
-  // Alamat token utang stabil
+  // Alamat dari token utang stabil
   "stableDebtToken": '0xB59A94A8C1BAdD6EA8A12D9A2B2D3E7D11cA67C2',
 
-  // Alamat token utang variabel
+  // Alamat dari token utang variabel
   "variableDebtToken": '0xD4F5BA10D5E4a6B3C5D906e68fFCFA61A56337EA'
 }
 
