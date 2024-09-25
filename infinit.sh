@@ -30,19 +30,35 @@ sleep 5
 source ~/.bashrc
 foundryup
 
-show "Menginstal Bun..."
-echo
-curl -fsSL https://bun.sh/install | bash
-export PATH="$HOME/.bun/bin:$PATH"
-sleep 5
-source ~/.bashrc
-echo
+# Memastikan skrip dijalankan dengan hak akses sudo
+if [[ $EUID -ne 0 ]]; then
+   echo "Silakan jalankan skrip ini dengan sudo." 
+   exit 1
+fi
+
 # Memperbarui repositori dan menginstal unzip
 echo "Memperbarui repositori dan menginstal unzip..."
 apt-get update
 apt-get install -y unzip
-show "Menyetel proyek Bun..."
-echo
+
+# Menginstal Bun
+echo "Menginstal Bun..."
+curl -fsSL https://bun.sh/install | bash
+
+# Menambahkan Bun ke PATH
+echo "Menambahkan Bun ke PATH..."
+echo 'export PATH="$HOME/.bun/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# Memeriksa instalasi
+echo "Memeriksa instalasi Bun..."
+if command -v bun &> /dev/null; then
+    echo "Bun berhasil diinstal: $(bun --version)"
+else
+    echo "Gagal menginstal Bun."
+fi
+
+echo "done"
 mkdir AirdropNode && cd AirdropNode
 bun init -y
 bun add @infinit-xyz/cli
