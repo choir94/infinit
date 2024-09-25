@@ -79,39 +79,6 @@ echo
 bunx infinit account export $ACCOUNT_ID
 
 sleep 5
-echo
-# Menghapus skrip deployAaveV3Action yang lama jika ada
-rm -rf src/scripts/deployAaveV3Action.script.ts
-
-cat <<EOF > src/scripts/deployAaveV3Action.script.ts
-import { DeployAaveV3Action, type actions } from '@infinit-xyz/aave-v3/actions'
-import type { z } from 'zod'
-
-type Param = z.infer<typeof actions['init']['paramsSchema']>
-
-// Ganti dengan parameter yang sesuai untuk Aave V3
-const params: Param = {
-  // Label mata uang asli (misalnya, ETH)
-  "nativeCurrencyLabel": 'ETH',
-
-  // Alamat pemilik dari proxy admin
-  "proxyAdminOwner": '$WALLET',
-
-  // Alamat pemilik dari factory
-  "factoryOwner": '$WALLET',
-
-  // Alamat dari wrapped native token (misalnya, WETH)
-  "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-}
-
-// Konfigurasi signer
-const signer = {
-  "deployer": "$ACCOUNT_ID"
-}
-
-export default { params, signer, Action: DeployAaveV3Action }
-EOF
-
 show "Menjalankan skrip Aave V3 Action..."
 echo
 bunx infinit script execute deployAaveV3Action.script.ts
