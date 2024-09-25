@@ -78,6 +78,51 @@ echo
 show "Salin kunci pribadi ini dan simpan di tempat yang aman, ini adalah kunci pribadi dari dompet ini"
 echo
 bunx infinit account export $ACCOUNT_ID
+# Menghapus skrip deployAaveV3Action yang lama jika ada
+rm -rf src/scripts/deployAaveV3Action.script.ts
+
+import { SetAaveFactoryOwnerAction, type actions } from '@infinit-xyz/aave-v3/actions'
+import type { z } from 'zod'
+
+type Param = z.infer<typeof actions['setAaveFactoryOwnerAction']['paramSchema']>
+
+// TODO: Ganti dengan parameter yang sebenarnya
+const params: Param = {
+  // Alamat factory Aave V3
+  "aaveV3Factory": undefined,
+
+  // Alamat pemilik baru
+  "newOwner": undefined
+}
+
+// TODO: Ganti dengan ID signer yang sebenarnya
+const signer = {
+  "factoryOwner": ""
+}
+
+export default { params, signer, Action: SetAaveFactoryOwnerAction }
+
+import { AaveGovernanceV2, type actions } from '@aave/protocol-v3/actions'
+import type { z } from 'zod'
+
+type Param = z.infer<typeof actions['changeAdminAction']['paramSchema']>
+
+// TODO: Replace with actual params for AAVE
+const params: Param = {
+
+  // TODO: 
+  "aaveGovernance": undefined,
+
+  // TODO: 
+  "newAdmin": undefined
+}
+
+// TODO: Replace with actual signer id
+const signer = {
+  "admin": ""
+}
+
+export default { params, signer, Action: AaveGovernanceV2.ChangeAdminAction }
 
 sleep 5
 show "Menjalankan skrip Aave V3 Action..."
