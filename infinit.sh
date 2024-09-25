@@ -78,6 +78,7 @@ echo
 show "Salin kunci pribadi ini dan simpan di tempat yang aman, ini adalah kunci pribadi dari dompet ini"
 echo
 bunx infinit account export $ACCOUNT_ID
+
 # Menghapus skrip deployAaveV3Action yang lama jika ada
 rm -rf src/scripts/deployAaveV3Action.script.ts
 
