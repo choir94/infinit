@@ -61,7 +61,6 @@ echo "done"
 mkdir AirdropNode && cd AirdropNode
 bun init -y
 bun add @infinit-xyz/cli
-bun add @infinit-xyz/aave-v3
 echo
 
 show "Menginisialisasi Infinit CLI dan menghasilkan akun..."
@@ -84,36 +83,35 @@ echo
 # Menghapus skrip deployAaveV3Action yang lama jika ada
 rm -rf src/scripts/deployAaveV3Action.script.ts
 
-cat <<EOF > src/scripts/deployAaveV3Action.script.ts
-import { DeployAaveV3Action, type actions } from '@infinit-xyz/aave-v3/actions'
+cat <<EOF > src/scripts/deployUniswapV3Action.script.ts
+import { DeployUniswapV3Action, type actions } from '@infinit-xyz/uniswap-v3/actions'
 import type { z } from 'zod'
- 
-type Param = z.infer<typeof actions['init']['paramSchema']>
- 
-// TODO: Ganti dengan parameter yang sebenarnya
+
+type Param = z.infer<typeof actions['init']['paramsSchema']>
+
+// TODO: Ganti dengan parameter yang sesuai
 const params: Param = {
-  // TODO: Label mata uang asli (contohnya, ETH)
+  // Label mata uang asli (misalnya, ETH)
   "nativeCurrencyLabel": 'ETH',
- 
-  // TODO: Alamat pemilik proxy admin
+
+  // Alamat pemilik proxy admin
   "proxyAdminOwner": '$WALLET',
- 
-  // TODO: Alamat pemilik factory
+
+  // Alamat pemilik factory
   "factoryOwner": '$WALLET',
- 
-  // TODO: Alamat dari token native yang dibungkus (contohnya, '0x123...abc')
+
+  // Alamat token native yang dibungkus (misalnya, WETH)
   "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 }
- 
-// TODO: Ganti dengan ID akun yang sebenarnya
-const accounts = {
+
+// Konfigurasi signer
+const signer = {
   "deployer": "$ACCOUNT_ID"
 }
- 
-export default { params, signer: accounts, Action: DeployAaveV3Action }
+
+export default { params, signer, Action: DeployUniswapV3Action }
 EOF
 
-Show "Menjalankan skrip Aave v3 Action..."
+show "Menjalankan skrip UniswapV3 Action..."
 echo
-bunx infinit script execute deployAaveV3Action.script.ts
-
+bunx infinit script execute deployUniswapV3Action.script.ts
