@@ -79,13 +79,15 @@ show "Salin kunci pribadi ini dan simpan di tempat yang aman, ini adalah kunci p
 echo
 bunx infinit account export $ACCOUNT_ID
 
+sleep 5
+echo
 # Menghapus skrip deployAaveV3Action yang lama jika ada
 rm -rf src/scripts/deployAaveV3Action.script.ts
 
-import { SetAaveFactoryOwnerAction, type actions } from '@infinit-xyz/aave-v3/actions'
+import { deployAaveV3Action, type actions } from '@infinit-xyz/aave-v3/actions'
 import type { z } from 'zod'
 
-type Param = z.infer<typeof actions['setAaveFactoryOwnerAction']['paramSchema']>
+type Param = z.infer<typeof actions['init']['paramSchema']>
 
 // TODO: Ganti dengan parameter yang sebenarnya
 const params: Param = {
@@ -101,12 +103,12 @@ const signer = {
   "factoryOwner": ""
 }
 
-export default { params, signer, Action: SetAaveFactoryOwnerAction }
+export default { params, signer, Action: deployAaveV3Action }
 
 import { AaveGovernanceV2, type actions } from '@aave/protocol-v3/actions'
 import type { z } from 'zod'
 
-type Param = z.infer<typeof actions['changeAdminAction']['paramSchema']>
+type Param = z.infer<typeof actions['init']['paramSchema']>
 
 // TODO: Replace with actual params for AAVE
 const params: Param = {
@@ -123,9 +125,8 @@ const signer = {
   "admin": ""
 }
 
-export default { params, signer, Action: AaveGovernanceV2.ChangeAdminAction }
+export default { params, signer, Action: deployAaveV3Action }
 
-sleep 5
 show "Menjalankan skrip Aave V3 Action..."
 echo
 bunx infinit script execute deployAaveV3Action.script.ts
