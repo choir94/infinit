@@ -107,7 +107,7 @@ const params: Param = {
  
 // TODO: Replace with actual account id
 const accounts = {
-  "deployer": "test-acc"
+  "deployer": "$ACCOUNT_ID"
 }
  
 export default { params, signer: accounts, Action: DeployAaveV3Action }
