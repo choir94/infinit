@@ -61,6 +61,7 @@ echo "done"
 mkdir AirdropNode && cd AirdropNode
 bun init -y
 bun add @infinit-xyz/cli
+bun add @infinit-xyz/aave-v3
 echo
 
 show "Menginisialisasi Infinit CLI dan menghasilkan akun..."
