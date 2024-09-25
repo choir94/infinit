@@ -37,7 +37,10 @@ export PATH="$HOME/.bun/bin:$PATH"
 sleep 5
 source ~/.bashrc
 echo
-
+# Memperbarui repositori dan menginstal unzip
+echo "Memperbarui repositori dan menginstal unzip..."
+apt-get update
+apt-get install -y unzip
 show "Menyetel proyek Bun..."
 echo
 mkdir AirdropNode && cd AirdropNode
