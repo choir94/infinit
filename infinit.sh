@@ -27,6 +27,10 @@ nvm alias default 22
 nvm use default
 source /root/.bashrc  # Memuat ulang bashrc setelah menggunakan NVM
 
+curl -s https://raw.githubusercontent.com/choir94/Airdropguide/refs/heads/main/logo.sh | bash
+
+sleep 3
+
 # Membuat folder proyek baru
 mkdir AirdropNode
 cd AirdropNode
