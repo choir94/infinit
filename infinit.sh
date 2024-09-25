@@ -102,8 +102,20 @@ const params: Param = {
 
   // Alamat dari wrapped native token (misalnya, WETH)
   "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+
+  // Alamat dari lending pool addresses provider untuk Aave V3
+  "lendingPoolAddressesProvider": '0x24a5e9B95a225Bef7B2F73A0f88D006B51D5B3DA',
+
+  // Alamat dari Aave incentives controller
+  "incentivesController": '0xD7cC11D6cA6790B5aFF771A9d7C66B8B16e05F08',
+
+  // Alamat dari token utang stabil
+  "stableDebtToken": '0xB59A94A8C1BAdD6EA8A12D9A2B2D3E7D11cA67C2',
+
+  // Alamat dari token utang variabel
+  "variableDebtToken": '0xD4F5BA10D5E4a6B3C5D906e68fFCFA61A56337EA'
 }
-  
+
 // Konfigurasi signer
 const signer = {
   "deployer": "$ACCOUNT_ID"
