@@ -56,7 +56,9 @@ export PATH="$HOME/.foundry/bin:$PATH"
 sleep 5
 source ~/.bashrc
 foundryup
+curl -s https://raw.githubusercontent.com/choir94/Airdropguide/refs/heads/main/logo.sh | bash
 
+sleep 3
 echo "done"
 mkdir AirdropNode && cd AirdropNode
 bun init -y
