@@ -84,11 +84,11 @@ echo
 # Menghapus skrip deployAaveV3Action yang lama jika ada
 rm -rf src/scripts/deployAaveV3Action.script.ts
 
-import { SetPoolAdminAction, type actions } from '@aave-v3/actions' 
+import { deployAaveV3Action, type actions } from '@aave-v3/actions' 
 import type { z } from 'zod'
 
 // Sesuaikan tipe parameter dengan Aave V3
-type Param = z.infer<typeof actions['setPoolAdminAction']['paramSchema']>
+type Param = z.infer<typeof actions['init']['paramSchema']>
 
 // TODO: Ganti dengan parameter yang sebenarnya
 const params: Param = {
@@ -104,7 +104,7 @@ const signer = {
   "currentAdmin": ""
 }
 
-export default { params, signer, Action: SetPoolAdminAction }
+export default { params, signer, Action: deployAaveV3Action }
 
 show "Menjalankan skrip Aave V3 Action..."
 echo
