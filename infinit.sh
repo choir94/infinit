@@ -84,48 +84,27 @@ echo
 # Menghapus skrip deployAaveV3Action yang lama jika ada
 rm -rf src/scripts/deployAaveV3Action.script.ts
 
-import { deployAaveV3Action, type actions } from '@infinit-xyz/aave-v3/actions'
+import { SetPoolAdminAction, type actions } from '@aave-v3/actions' 
 import type { z } from 'zod'
 
-type Param = z.infer<typeof actions['init']['paramSchema']>
+// Sesuaikan tipe parameter dengan Aave V3
+type Param = z.infer<typeof actions['setPoolAdminAction']['paramSchema']>
 
 // TODO: Ganti dengan parameter yang sebenarnya
 const params: Param = {
-  // Alamat factory Aave V3
-  "aaveV3Factory": undefined,
+  // TODO: Masukkan alamat Pool dari Aave V3
+  "aavePoolAddress": undefined,
 
-  // Alamat pemilik baru
-  "newOwner": undefined
-}
-
-// TODO: Ganti dengan ID signer yang sebenarnya
-const signer = {
-  "factoryOwner": ""
-}
-
-export default { params, signer, Action: deployAaveV3Action }
-
-import { AaveGovernanceV2, type actions } from '@aave/protocol-v3/actions'
-import type { z } from 'zod'
-
-type Param = z.infer<typeof actions['init']['paramSchema']>
-
-// TODO: Replace with actual params for AAVE
-const params: Param = {
-
-  // TODO: 
-  "aaveGovernance": undefined,
-
-  // TODO: 
+  // TODO: Masukkan alamat pemilik baru
   "newAdmin": undefined
 }
 
-// TODO: Replace with actual signer id
+// TODO: Ganti dengan id penandatangan yang sebenarnya
 const signer = {
-  "admin": ""
+  "currentAdmin": ""
 }
 
-export default { params, signer, Action: deployAaveV3Action }
+export default { params, signer, Action: SetPoolAdminAction }
 
 show "Menjalankan skrip Aave V3 Action..."
 echo
