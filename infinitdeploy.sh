@@ -14,76 +14,109 @@ echo "Memperbarui repositori dan menginstal unzip..."
 apt-get update
 apt-get install -y unzip
 
-# Menginstal Bun
-echo "Menginstal Bun..."
-curl -fsSL https://bun.sh/install | bash
+# Fungsi menu utama
+function main_menu() {
+    while true; do
+        clear
+        
+        echo "================================================================"
+        echo "Airdrop Node Telegram Channel: https://t.me/airdrop_node"
+        echo "Untuk keluar dari script, tekan ctrl+c pada keyboard"
+        echo "Pilih tindakan yang ingin dilakukan:"
+        echo "1) Deploy Kontrak"
+        echo "2) Keluar"
 
-# Menambahkan Bun ke PATH
-echo "Menambahkan Bun ke PATH..."
-echo 'export PATH="$HOME/.bun/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
+        read -p "Masukkan pilihan: " choice
 
-# Memeriksa instalasi
-echo "Memeriksa instalasi Bun..."
-if command -v bun &> /dev/null; then
-    echo "Bun berhasil diinstal: $(bun --version)"
-else
-    echo "Gagal menginstal Bun."
-fi
+        case $choice in
+            1)
+                deploy_contract
+                ;;
+            2)
+                echo "Keluar dari script..."
+                exit 0
+                ;;
+            *)
+                echo "Pilihan tidak valid, silakan coba lagi"
+                ;;
+        esac
+        read -n 1 -s -r -p "Tekan enter tombol untuk melanjutkan..."
+    done
+}
 
-export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-    show "Memuat NVM..."
+# Periksa dan instal perintah
+function check_install() {
+    command -v "$1" &> /dev/null
+    if [ $? -ne 0 ]; then
+        echo "$1 belum diinstal, menginstal..."
+        eval "$2"
+    else
+        echo "$1 sudah diinstal"
+    fi
+}
+
+# Deploy kontrak
+function deploy_contract() {
+    export NVM_DIR="$HOME/.nvm"
+    
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+        source "$NVM_DIR/nvm.sh"
+    else
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+        source "$NVM_DIR/nvm.sh"
+    fi
+
+    # Periksa dan instal Node.js
+    if ! command -v node &> /dev/null; then
+        nvm install 22
+        nvm alias default 22
+        nvm use default
+    fi
+    
+    echo "Menginstal Foundry..."
+    curl -L https://foundry.paradigm.xyz | bash
+    export PATH="$HOME/.foundry/bin:$PATH"
+    sleep 5
+    source ~/.bashrc
+    foundryup
+    
+    # Periksa dan instal Bun
+    if ! command -v bun &> /dev/null; then
+        curl -fsSL https://bun.sh/install | bash
+        export PATH="$HOME/.bun/bin:$PATH"
+        sleep 5
+        source "$HOME/.bashrc"
+    fi
+
+    # Periksa apakah Bun ada
+    if ! command -v bun &> /dev/null; then
+        echo "Bun belum diinstal, instalasi mungkin gagal, periksa langkah instalasi"
+        exit 1
+    fi
+
+    # Setup proyek Bun
+    mkdir -p infinit && cd infinit || exit
+    bun init -y
+    bun add @infinit-xyz/cli
+
+    echo "Menginisialisasi Infinit CLI dan menghasilkan akun..."
+    bunx infinit init
+    bunx infinit account generate
     echo
-    source "$NVM_DIR/nvm.sh"
-else
-    show "NVM tidak ditemukan, menginstal NVM..."
+
+    read -p "Apa alamat dompet Anda (masukkan alamat dari langkah di atas): " WALLET
     echo
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
-    source "$NVM_DIR/nvm.sh"
-fi
+    read -p "Apa ID akun Anda (masukkan dari langkah di atas): " ACCOUNT_ID
+    echo
 
-echo
-show "Menginstal Node.js..."
-echo
-nvm install 22 && nvm alias default 22 && nvm use default
-echo
+    echo "Salin private key ini dan simpan di suatu tempat, ini adalah private key dompet Anda"
+    bunx infinit account export $ACCOUNT_ID
 
-show "Menginstal Foundry..."
-echo
-curl -L https://foundry.paradigm.xyz | bash
-export PATH="$HOME/.foundry/bin:$PATH"
-sleep 5
-source ~/.bashrc
-foundryup
-curl -s https://raw.githubusercontent.com/choir94/Airdropguide/refs/heads/main/logo.sh | bash
+    sleep 5
+    echo
 
-sleep 3
-echo "done"
-mkdir AirdropNode && cd AirdropNode
-bun init -y
-bun add @infinit-xyz/cli
-echo
-
-show "Menginisialisasi Infinit CLI dan menghasilkan akun..."
-echo
-bunx infinit init
-bunx infinit account generate
-echo
-
-read -p "Apa alamat dompet Anda (Masukkan alamat dari langkah di atas) : " WALLET
-echo
-read -p "Apa ID akun Anda (yang dimasukkan di langkah di atas) : " ACCOUNT_ID
-echo
-
-show "Salin kunci pribadi ini dan simpan di tempat yang aman, ini adalah kunci pribadi dari dompet ini"
-echo
-bunx infinit account export $ACCOUNT_ID
-
-sleep 5
-echo
-# Menghapus skrip deployAaveV3Action yang lama jika ada
-rm -rf src/scripts/deployAaveV3Action.script.ts
+    # Hapus skrip deployUniswapV3Action lama jika ada
+    rm -rf src/scripts/deployUniswapV3Action.script.ts
 
 cat <<EOF > src/scripts/deployUniswapV3Action.script.ts
 import { DeployUniswapV3Action, type actions } from '@infinit-xyz/uniswap-v3/actions'
