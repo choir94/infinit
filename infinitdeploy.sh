@@ -1,18 +1,15 @@
 #!/bin/bash
-function show {
-  echo -e "\e[1;34m$1\e[0m"
-}
 
-# Memastikan skrip dijalankan dengan hak akses sudo
-if [[ $EUID -ne 0 ]]; then
-   echo "Silakan jalankan skrip ini dengan sudo." 
-   exit 1
-fi
+# Jalur penyimpanan script
+SCRIPT_PATH="$HOME/infinit.sh"
 
-# Memperbarui repositori dan menginstal unzip
-echo "Memperbarui repositori dan menginstal unzip..."
-apt-get update
-apt-get install -y unzip
+# Tampilkan Logo
+curl -s https://raw.githubusercontent.com/choir94/Airdropguide/refs/heads/main/logo.sh | bash
+sleep 3
+
+# Perbarui sistem dan instal unzip
+sudo apt update
+sudo apt install -y unzip
 
 # Fungsi menu utama
 function main_menu() {
@@ -53,6 +50,25 @@ function check_install() {
     else
         echo "$1 sudah diinstal"
     fi
+}
+
+# Memilih URL RPC
+function select_rpc() {
+    echo "Pilih URL RPC (pilih nomor dan tekan Enter untuk konfirmasi):"
+    PS3="Pilih salah satu opsi: "
+    options=("https://1rpc.io/holesky" "https://endpoints.omniatech.io/v1/eth/holesky/public" "https://ethereum-holesky-rpc.publicnode.com")
+
+    select opt in "${options[@]}"; do
+        case $opt in
+            "${options[0]}"|"${options[1]}"|"${options[2]}")
+                echo "URL RPC yang Anda pilih: $opt"
+                # Ganti di file konfigurasi
+                sed -i "s|rpc_url: .*|rpc_url: '$opt'|" /root/infinit/src/infinit.config.yaml
+                break
+                ;;
+            *) echo "Pilihan tidak valid, silakan coba lagi." ;;
+        esac
+    done
 }
 
 # Deploy kontrak
@@ -124,22 +140,15 @@ import type { z } from 'zod'
 
 type Param = z.infer<typeof actions['init']['paramsSchema']>
 
-// TODO: Ganti dengan parameter yang sesuai
+// TODO: Ganti dengan parameter sebenarnya
 const params: Param = {
-  // Label mata uang asli (misalnya, ETH)
   "nativeCurrencyLabel": 'ETH',
-
-  // Alamat pemilik proxy admin
   "proxyAdminOwner": '$WALLET',
-
-  // Alamat pemilik factory
   "factoryOwner": '$WALLET',
-
-  // Alamat token native yang dibungkus (misalnya, WETH)
   "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 }
 
-// Konfigurasi signer
+// Konfigurasi penandatangan
 const signer = {
   "deployer": "$ACCOUNT_ID"
 }
@@ -147,6 +156,14 @@ const signer = {
 export default { params, signer, Action: DeployUniswapV3Action }
 EOF
 
-show "Menjalankan skrip UniswapV3 Action..."
-echo
-bunx infinit script execute deployUniswapV3Action.script.ts
+    # Pilih RPC
+    select_rpc
+
+    echo "Menjalankan skrip UniswapV3 Action..."
+    bunx infinit script execute deployUniswapV3Action.script.ts
+
+    read -p "Tekan Enter untuk kembali ke menu utama..."
+}
+
+# Jalankan menu utama
+main_menu
