@@ -155,15 +155,6 @@ const signer = {
 
 export default { params, signer, Action: DeployUniswapV3Action }
 EOF
-
-    # Pilih RPC
-    select_rpc
-
-    echo "Menjalankan skrip UniswapV3 Action..."
-    bunx infinit script execute deployUniswapV3Action.script.ts
-
-    read -p "Tekan Enter untuk kembali ke menu utama..."
-}
-
-# Jalankan menu utama
-main_menu
+show "Menjalankan skrip UniswapV3 Action..."
+echo
+bunx infinit script execute deployUniswapV3Action.script.ts
