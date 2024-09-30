@@ -52,6 +52,25 @@ function check_install() {
     fi
 }
 
+# Memilih URL RPC
+function select_rpc() {
+    echo "Pilih URL RPC (pilih nomor dan tekan Enter untuk konfirmasi):"
+    PS3="Pilih salah satu opsi: "
+    options=("https://bsc-dataseed.binance.org/" "https://data-seed-prebsc-1-s1.binance.org:8545/")
+
+    select opt in "${options[@]}"; do
+        case $opt in
+            "${options[0]}"|"${options[1]}")
+                echo "URL RPC yang Anda pilih: $opt"
+                # Ganti di file konfigurasi
+                sed -i "s|rpc_url: .*|rpc_url: '$opt'|" /root/infinit/src/infinit.config.yaml
+                break
+                ;;
+            *) echo "Pilihan tidak valid, silakan coba lagi." ;;
+        esac
+    done
+}
+
 # Deploy kontrak
 function deploy_contract() {
     export NVM_DIR="$HOME/.nvm"
@@ -121,22 +140,15 @@ import type { z } from 'zod'
 
 type Param = z.infer<typeof actions['init']['paramsSchema']>
 
-// TODO: Ganti dengan parameter yang sesuai
+// TODO: Ganti dengan parameter sebenarnya
 const params: Param = {
-  // Label mata uang asli (misalnya, ETH)
-  "nativeCurrencyLabel": 'ETH',
-
-  // Alamat pemilik proxy admin
+  "nativeCurrencyLabel": 'BNB',
   "proxyAdminOwner": '$WALLET',
-
-  // Alamat pemilik factory
   "factoryOwner": '$WALLET',
-
-  // Alamat token native yang dibungkus (misalnya, WETH)
   "wrappedNativeToken": '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 }
 
-// Konfigurasi signer
+// Konfigurasi penandatangan
 const signer = {
   "deployer": "$ACCOUNT_ID"
 }
@@ -144,6 +156,14 @@ const signer = {
 export default { params, signer, Action: DeployUniswapV3Action }
 EOF
 
-show "Menjalankan skrip UniswapV3 Action..."
-echo
-bunx infinit script execute deployUniswapV3Action.script.ts
+    # Pilih RPC
+    select_rpc
+
+    echo "Menjalankan skrip UniswapV3 Action..."
+    bunx infinit script execute deployUniswapV3Action.script.ts
+
+    read -p "Tekan Enter untuk kembali ke menu utama..."
+}
+
+# Jalankan menu utama
+main_menu
